@@ -1,0 +1,202 @@
+<script>
+(function(d){
+    var mL = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    var mS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+
+    d.prototype.getLongMonth = d.getLongMonth = function getLongMonth (inMonth) {
+        return gM.call(this, inMonth, mL);
+    }
+
+    d.prototype.getShortMonth = d.getShortMonth = function getShortMonth (inMonth) {
+        return gM.call(this, inMonth, mS);
+    }
+
+    function gM(inMonth, arr){
+        var m;
+
+        if(this instanceof d){
+            m = this.getMonth();
+        }
+        else if(typeof inMonth !== 'undefined') {
+            m = parseInt(inMonth,10) - 1; // Subtract 1 to start January at zero
+        }
+
+        return arr[m];
+    }
+})(Date);
+(function() {
+  var sheet = (function() {
+    // Create the <style> tag
+    var style = document.createElement("style");
+    // WebKit hack :(
+    style.appendChild(document.createTextNode(""));
+    // Add the <style> element to the page
+    document.head.appendChild(style);
+
+    return style.sheet;
+  })();
+
+  function shipsOn(freq,unit) {
+    console.log('freq', freq);
+    console.log('unit', unit);
+    var days = 0;
+    if (unit.toLowerCase() == 'weeks') {
+      days = Number(freq) * 7
+    } else if (unit.toLowerCase() == 'days') {
+      days = Number(freq)
+    } else if (unit.toLowerCase() == 'months') {
+      days = Number(freq) * 30
+    }
+    return new Date(Date.now() + (1000 * 60 * 60 * 24 * days));
+  }
+
+  function nth(d) {
+    if(d>3 && d<21) return 'th'; // thanks kennebec
+    switch (d % 10) {
+          case 1:  return "st";
+          case 2:  return "nd";
+          case 3:  return "rd";
+          default: return "th";
+      }
+  }
+
+  var ongoingWrapper = document.createElement('DIV');
+  var ongoingProduct = document.createElement('DIV');
+  var ongoingLabel = document.createElement('Label');
+  ongoingProduct.classList.add('ongoing-sub-product');
+  ongoingWrapper.classList.add('ongoing-sub');
+  ongoingWrapper.appendChild(ongoingLabel);
+  ongoingWrapper.appendChild(ongoingProduct);
+
+
+  var overlay = document.createElement('DIV');
+  overlay.id = "loading";
+  var loader = '<svg class="icon-svg icon-svg--color-accent icon-svg--size-32 icon-svg--spinner blank-slate__icon" aria-hidden="true" focusable="false"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#spinner-small"><svg id="spinner-small" width="100%" height="100%"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M32 16c0 8.837-7.163 16-16 16S0 24.837 0 16 7.163 0 16 0v2C8.268 2 2 8.268 2 16s6.268 14 14 14 14-6.268 14-14h2z"></path></svg></svg></use></svg>';
+  var loaderText = '<p>Super Neat order summary is loading!</p>';
+  overlay.innerHTML = '<div class="content-box blank-slate blank-slate-custom">' + loader + loaderText + '</div>';
+  sheet.insertRule("#loading { width:100%;height:100%;top:0;left:0;position:absolute;display:block;opacity:0.7;background-color:#f9f9f9;z-index:99;text-align:center; }");
+
+  document.addEventListener('DOMContentLoaded', function() {
+      console.log("dom loaded", Checkout.$('.order-summary'));
+
+      Checkout.$('.order-summary').append(overlay);
+
+      /**
+      * Cart JSON
+      */
+      var cartJSON = JSON.parse(Checkout.$('#cart_json').text().split("CART JSON: ")[1].split(" DEFAULT")[0].trim());
+      var trial = cartJSON.items.filter((el) => {
+      	return el.title.includes("trial");
+      })[0];
+
+      /**
+      * Get data for ongoing subscription
+      */
+      if (trial !== undefined) {
+        var freq = trial.properties.shipping_interval_frequency;
+        var unit = trial.properties.shipping_interval_unit_type;
+        var subShipsOn = shipsOn(freq,unit);
+
+        Checkout.$.ajax({
+          method: 'GET',
+          url: 'https://neat-nutrition-dev.myshopify.com/products/' + trial.properties._product_handle,
+        }).then(function(data) {
+          ongoingLabel.textContent = "Ships & Charges on " + subShipsOn.getLongMonth() + " " + subShipsOn.getDate() + nth(subShipsOn.getDate());
+          $content = Checkout.$(data).find("[data-variant-id='"+ trial.properties._ongoing_variant_id +"']");
+          Checkout.$(ongoingProduct).html($content);
+          Checkout.$('.order-summary').append(ongoingWrapper);
+          Checkout.$('.ongoing-sub .product_info_frequency').append('<span> every '+ freq + ' ' + unit +'</span>');
+        })
+      }
+    });
+  window.addEventListener('load', function() {
+      Checkout.$('#loading').hide();
+      Checkout.$('.summary-body').css('opacity', '1');
+    });
+})();
+</script>
+
+<style>
+  .ongoing-sub {
+    position: absolute;
+    margin-top: 25px;
+    width: 100%;
+  }
+  .ongoing-sub-product {
+    padding: 1.3em;
+    border: 1px solid #e1e1e1;
+    border-radius: 3px;
+    margin-top: 15px;
+  }
+  .order-summary .ongoing-sub .product-list .product {
+    margin-top: 0;
+    padding-top: 0;
+  }
+  .ongoing-sub svg {
+    position: relative;
+    top: 4px;
+    width: 15px;
+  }
+  .summary-body {
+    opacity: 0;
+  }
+  .content-box {
+    background: #fff;
+    background-clip: padding-box;
+    border-radius: 15px;
+    color: #545454;
+    top: 50%;
+    position: absolute;
+    width: 100%;
+    transform: translateY(-50%);
+  }
+  .icon-svg--spinner {
+  -webkit-animation: fade-in 0.5s ease-in-out, rotate 0.5s linear infinite;
+  animation: fade-in 0.5s ease-in-out, rotate 0.5s linear infinite
+  }
+  .icon-svg {
+  display: inline-block;
+  vertical-align: middle;
+  fill: currentColor;
+  -webkit-transition: color 0.2s ease-in-out;
+  transition: color 0.2s ease-in-out;
+  }
+  .icon-svg--size-32 {
+  width: 32px;
+  height: 32px;
+  }
+  .icon-svg--size-20 {
+  width: 20px;
+  height: 20px;
+  top: 14px;
+  right: 17px;
+  position: absolute;
+  }
+  .icon-svg--size-14 {
+  width: 14px;
+  height: 14px;
+  top: 0px;
+  right: -10px;
+  position: relative;
+  }
+  .icon-svg.hide {
+  display: none;
+  }
+  .loader .icon-svg.hide {
+  display: inline;
+  }
+  .icon-svg--color-accent {
+  color: #e6479f;
+  fill: currentColor;
+  }
+  @keyframes rotate {
+    0% {
+      -webkit-transform: rotate(0);
+      transform: rotate(0)
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg)
+    }
+  }
+</style>
