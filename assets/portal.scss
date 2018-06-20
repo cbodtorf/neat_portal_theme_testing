@@ -1,3 +1,25 @@
+// mixin
+@mixin placeholder-text($color: #9d9d9d, $opacity: 0.6) {
+  color: $color;
+  opacity: $opacity;
+}
+
+::-webkit-input-placeholder {
+  @include placeholder-text();
+}
+
+::-moz-placeholder {
+  @include placeholder-text();
+}
+
+:-ms-input-placeholder {
+  @include placeholder-text();
+}
+
+::-ms-input-placeholder {
+  @include placeholder-text($opacity: 1);
+}
+
 // BASE STYLING
 span,a {
     display: inline-block;
@@ -1415,6 +1437,7 @@ span,a {
   display: flex;
   box-sizing: border-box;
   padding: 10px 20px;
+  padding-left: 34px;
 }
 .drawer-header h2 {
   overflow: hidden;
@@ -1445,7 +1468,7 @@ span,a {
   display: flex;
   flex-direction: column;
   padding-bottom: 15px;
-  border-bottom: 2px #017F7B solid;
+  border-bottom: 1px #017F7B solid;
 }
 .drawer-header h2 .header-content>span {
   flex: 1;
@@ -1706,7 +1729,7 @@ span,a {
 }
 
 .drawer-body .price-drawer.-open .subtotals {
-    max-height: 150px
+    max-height: 180px
 }
 
 .form .form--row {
@@ -1731,15 +1754,14 @@ span,a {
   box-sizing: border-box;
   border-left: 1px #bfbfbf solid;
   border-right: 1px #bfbfbf solid;
-  color: #868686;
   background-color: #ffffff;
   font-family: "museo-sans", "Museo Sans", "Helvetica", "Arial", sans-serif;
-  font-weight: 500;
-  font-size: 13px;
-  letter-spacing: 0.4px;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 1px;
   line-height: 20px;
   text-transform: none;
-  min-height: 60px;
+  min-height: 50px;
   padding: 0px
 }
 
@@ -1758,7 +1780,7 @@ span,a {
   }
 
   .form .form--field,.form .form--field+.form--field {
-    border: 1px #bfbfbf solid
+    border: 1px #017F7B solid
   }
 
   .form .form--field {
@@ -1796,7 +1818,7 @@ span,a {
   position: absolute;
   top: 0;
   width: 100%;
-  padding-top: 28px;
+  padding-top: 15px;
   padding-bottom: 10px
 }
 
@@ -1913,11 +1935,10 @@ span,a {
   border: none;
   padding: 0px;
   background-color: none;
-  color: #666666;
   font-family: "museo-sans", "Museo Sans", "Helvetica", "Arial", sans-serif;
-  font-weight: 500;
-  font-size: 13px;
-  letter-spacing: 0.4px;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 1px;
   line-height: 20px;
   text-transform: none
 }
@@ -2130,14 +2151,9 @@ span,a {
   width: 100%;
 }
 
-.add-product {
-  color: #4c4634;
+.section-title, .date-text {
+  color: #017F7B;
   font-weight: 600;
-  background: #ffd859;
-  border-radius: 50px;
-  width: 100%;
-  padding: 5px 15px;
-  border: none;
 }
 
 .ship-date {
@@ -2206,15 +2222,55 @@ span,a {
   }
 }
 
+.btn-primary {
+  color: #4c4634;
+  font-weight: 600;
+  background: #ffd859;
+  border-radius: 50px;
+  width: 100%;
+  padding: 5px 15px;
+  border: none;
+  letter-spacing: 1.5px;
+}
+
 // Your subscription card
 .card.product-card {
   padding: 15px;
+  border: 1px solid transparent;
 
   .section-title {
     font-weight: bold;
     color: #017F7B;
   }
+
+  button.add-product {
+    display: none;
+  }
+
+  .card--section {
+    padding: 5px;
+  }
+  .radio-selector--container {
+    margin-bottom: 0px
+  }
 }
+.card.product-card.-selected {
+  border: 1px solid #017F7B;
+
+  button.add-product {
+    display: block;
+  }
+  button.choose-variant {
+    display: none;
+  }
+}
+.card.product-card:hover>*, .card.product-card:focus-within>* {
+  opacity: 1;
+}
+.card.product-card:hover, .card.product-card:focus-within {
+  border: 1px solid #017F7B;
+}
+
 .subscription-display .icon.icon--full {
   width: 25px;
   height: 25px;
@@ -2304,4 +2360,24 @@ input[type="radio"] {
     line-height: 28px;
     text-transform: none;
     color: #666666
+}
+
+// Address form
+.address-content {
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 1.7px;
+}
+.edit-address-link {
+  padding-top: 20px;
+  margin-top: 40px;
+  border-top: 1px solid #017F7B;
+
+  a {
+    color: #017F7B;
+    text-decoration: underline;
+    font-size: 14px;
+    letter-spacing: 1.3px;
+    font-weight: bold;
+  }
 }
