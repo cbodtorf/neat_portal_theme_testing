@@ -2243,7 +2243,7 @@ span,a {
     color: #017F7B;
   }
 
-  button.add-product {
+  button.add-product, button.swap-product {
     display: none;
   }
 
@@ -2257,7 +2257,7 @@ span,a {
 .card.product-card.-selected {
   border: 1px solid #017F7B;
 
-  button.add-product {
+  button.add-product, button.swap-product {
     display: block;
   }
   button.choose-variant {
@@ -2380,4 +2380,39 @@ input[type="radio"] {
     letter-spacing: 1.3px;
     font-weight: bold;
   }
+}
+
+// ACCOUNT DETAILS
+.neat-account-details {
+   .card--header {
+     font-size: 18px;
+     font-weight: 600;
+     color: #017F7B;
+   }
+   .address-nickname {
+     font-size: 16px;
+     font-weight: 600;
+   }
+   .section-sub-title {
+     font-size: 14px;
+     font-weight: 600;
+   }
+   .next-box-ships:not(:last-of-type) {
+     margin-bottom: 15px;
+   }
+   .next-box-ships, .card--section {
+     position: relative;
+   }
+}
+.drawer-link {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: 0.1s transform linear;
+  color: #017F7B;
+  text-decoration: underline;
+}
+.next-box-ships .drawer-link {
+  right: 0px;
 }
