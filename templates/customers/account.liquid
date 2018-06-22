@@ -1,70 +1,134 @@
-<div class="page-width">
-  <div class="section-header text-center">
-    <h1>{{ 'customer.account.title' | t }}</h1>
-
+<nav class="profile-subnav">
+  <label class="profile-subnav-label" for="profile_subnav_control">Profile</label>
+    {% if customer.metafields.subscriptions.customer_string %}
+      <a href="/tools/portal/customer/{{customer.metafields.subscriptions.customer_string}}" class="profile-subnav-link">
+        <span>Your Neat Plan</span>
+      </a>
+    {% endif %}
+    {% if customer.metafields.subscriptions.customer_string %}
+      <a href="/tools/portal/customer/{{customer.metafields.subscriptions.customer_string}}/account_details" class="profile-subnav-link">
+        <span>Your Details</span>
+      </a>
+    {% else %}
+      <a href="/account" class="profile-subnav-link">
+        <span>Your Details</span>
+      </a>
+    {% endif %}
+    <a href="/account?order-history=true" class="profile-subnav-link active">
+      <span>Order History</span>
+    </a>
+    <a href="/account/logout" class="profile-subnav-link">
+      <span>Sign Out</span>
+    </a>
     {% if customer.metafields.subscriptions.customer_string %}
     <!--BeginRechargeCode-->
-    <p><a href="/tools/recurring/customer/{{customer.metafields.subscriptions.customer_string}}/subscriptions/">Manage Subscriptions</a></p>
+    <p style="display: none;"><a href="/tools/recurring/customer/{{customer.metafields.subscriptions.customer_string}}/subscriptions/">Manage Subscriptions</a></p>
     <!--EndRechargeCode-->
     {% endif %}<br>
+</nav>
 
-    {% if customer.metafields.subscriptions.customer_string %}
-    <!--BeginRechargeCode-->
-    <p><a href="/tools/portal/customer/{{customer.metafields.subscriptions.customer_string}}">Enter Portal</a></p>
-    <!--EndRechargeCode-->
-    {% endif %}
+<div class="profile neat-plan-home neat-account-details">
+  <div class="page-container">
+    <div class="">
+      <div class="center-column">
+        <div class="next-box-date-and-products-section">
+          <div class="header-section">
+              <h3 style="text-align: center; width: 100%;">Your Order History</h3>
+          </div>
+          {% paginate customer.orders by 20 %}
+            {% if customer.orders.size != 0 %}
 
-    {{ 'layout.customer.log_out' | t | customer_logout_link }}
-  </div>
+            {% for order in customer.orders %}
+              <div class="card next-box-products-card-exp">
+                <div class="card--slide-animation-container">
+                  <a class="card--section -interactive -opens-right js-drawer-button" href="{{ order.customer_url }}">
+                  <div class="card--section">
+                    <div class="card--header section-title">{{ order.created_at | date: format: 'month_day_year' }}</div>
+                    <div class="card--body">
+                      <div class="card--body-content" data-label="{{ 'customer.orders.order_number' | t }}">
+                        <b>{{ order.total_price | money }}</b> | Order {{ order.name }}
+                      </div>
+                    </div>
+                  </div>
+                  <svg class="icon icon--full-color drawer-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                    <defs><style>.caret-right{fill:#07827e;}</style></defs><title>Untitled-2</title>
+                    <g id="Layer_2" data-name="Layer 2">
+                      <path class="caret-right" d="M50,2.64A47.36,47.36,0,1,0,97.36,50,47.36,47.36,0,0,0,50,2.64ZM44.34,76.41,37.22,69,57.41,49.64,37,30.52,44,23,72.36,49.56Z"/>
+                    </g>
+                  </svg>
+                </a>
+                </div>
+              </div>
+            {% endfor %}
 
-  <div class="grid">
-    <div class="grid__item medium-up--two-thirds">
-      <h2>{{ 'customer.orders.title' | t }}</h2>
-
-      {% paginate customer.orders by 20 %}
-        {% if customer.orders.size != 0 %}
-
-          <table class="responsive-table">
-            <thead>
-              <tr>
-                <th>{{ 'customer.orders.order_number' | t }}</th>
-                <th>{{ 'customer.orders.date' | t }}</th>
-                <th>{{ 'customer.orders.payment_status' | t }}</th>
-                <th>{{ 'customer.orders.fulfillment_status' | t }}</th>
-                <th>{{ 'customer.orders.total' | t }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for order in customer.orders %}
-                <tr>
-                  <td data-label="{{ 'customer.orders.order_number' | t }}">
-                    <a href="{{ order.customer_url }}" class="btn btn--secondary btn--small">{{ order.name }}</a>
-                  </td>
-                  <td data-label="{{ 'customer.orders.date' | t }}">{{ order.created_at | date: format: 'month_day_year' }}</td>
-                  <td data-label="{{ 'customer.orders.payment_status' | t }}">{{ order.financial_status_label }}</td>
-                  <td data-label="{{ 'customer.orders.fulfillment_status' | t }}">{{ order.fulfillment_status_label }}</td>
-                  <td data-label="{{ 'customer.orders.total' | t }}">{{ order.total_price | money }}</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-
-        {% else %}
-
-          <p>{{ 'customer.orders.none' | t }}</p>
-
-        {% endif %}
-        {% if paginate.pages > 1 %}
-          {% include 'pagination' %}
-        {% endif %}
-      {% endpaginate %}
-    </div>
-    <div class="grid__item medium-up--one-third">
-      <h2>{{ 'customer.account.details' | t }}</h2>
-
-      {{ customer.default_address | format_address }}
-
-      <p><a href="/account/addresses" class="btn btn--small">{{ 'customer.account.view_addresses' | t }} ({{ customer.addresses_count }})</a></p>
+            {% endif %}
+            {% if paginate.pages > 1 %}
+              {% include 'pagination' %}
+            {% endif %}
+          {% endpaginate %}
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
+<div class="portal-loader">
+  <div class="loader--content">
+    <h2>Customer Portal Loading</h2>
+		<div class="loading-spinner">
+		</div>
+	</div>
+</div>
+
+<style>
+  div.portal-loader {
+    position: absolute;
+    top: 0;
+    bottom: 0%;
+    left: 0;
+    right: 0%;
+    background-color: white;
+    z-index: 99;
+  }
+  div.portal-loader .loader--content {
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    background-color: #eaeaea;
+    padding: 50px;
+    border-radius: 7px;
+  }
+  div.portal-loader .loader--content h2 {
+    color: #017F7B;
+  }
+  div.portal-loader .loading-spinner {
+    border: 2px solid #b7d9d9;
+    border-top-color: #017F7B;
+    margin: 0 auto;
+  }
+</style>
+
+<script>
+  function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    location.search
+        .substr(1)
+        .split("&")
+        .forEach(function (item) {
+          tmp = item.split("=");
+          if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+        });
+    return result;
+  }
+  {% if customer.metafields.subscriptions.customer_string %}
+    if (findGetParameter('order-history') === 'true') {
+      // stay for order history
+      document.querySelector('.portal-loader').style.display = 'none';
+    } else {
+      window.location.href = "/tools/portal/customer/{{customer.metafields.subscriptions.customer_string}}";
+    }
+  {% endif %}
+</script>

@@ -42,7 +42,7 @@ span,a {
 .profile-subnav {
     position: relative;
     display: block;
-    max-height: 58px;
+    max-height: 65px;
     padding: 0 20px;
     border-bottom: 1px solid #bfbfbf;
     background-color: #ffffff;
@@ -63,7 +63,7 @@ span,a {
     text-transform: uppercase;
     letter-spacing: 1.05px;
     line-height: 20px;
-    color: #185674
+    color: #017F7B
 }
 
 .profile-subnav .profile-subnav-label:after {
@@ -114,7 +114,8 @@ span,a {
     top: 18px;
     right: 20px;
     font-weight: normal;
-    color: #185674;
+    color: #017F7B;
+    border-bottom: 1px solid #017F7B;
     opacity: 1;
     animation-name: activeFlyIn;
     animation-duration: 0.4s;
@@ -125,11 +126,13 @@ span,a {
 
 @media (min-width: 768px) {
     .profile-subnav {
-        padding:12px 0 13px;
+        padding: 18px 0px 25px;
         max-height: auto;
         border-bottom-color: #bfbfbf;
         text-align: center;
-        animation: none
+        animation: none;
+        border-bottom: 1px solid #017F7B;
+        border-top: 1px solid #017F7B;
     }
 
     .profile-subnav .profile-subnav-label {
@@ -148,7 +151,7 @@ span,a {
 
     .profile-subnav .profile-subnav-link.active span {
         position: static;
-        color: #185674;
+        color: #017F7B;
         animation: none
     }
 }
@@ -775,7 +778,7 @@ span,a {
 }
 
 .profile .page-container {
-    max-width: 980px;
+    max-width: 1280px;
     margin: 0 auto;
     padding: 0 5%;
     padding-bottom: 120px
@@ -1018,14 +1021,14 @@ span,a {
 
 @media (min-width: 1200px) {
     .profile.neat-plan-home .left-column {
-        width:380px
+        width:440px
     }
 }
 
 .profile.neat-plan-home .right-column {
     margin-left: 100px;
-    width: 460px;
-    float: left
+    width: 700px;
+    float: right;
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
@@ -2029,7 +2032,7 @@ span,a {
   border-radius: 25px;
   cursor: pointer;
   outline: none;
-  transition: all 0.3s ease-out;
+  transition: all 0.2s ease-out;
 
   /* Font settings */
   font-weight: bold;
@@ -2056,11 +2059,11 @@ span,a {
   right: 0;
 
   /* Styles */
-  background: white;
-  border-radius: inherit;
-  border: 1px solid rgba(0,0,0,0.17);
+  background-color: #fafafa;
+  border-radius: 8px;
+  border: 1px solid #017F7B;
   font-weight: normal;
-  transition: all 0.5s ease-in;
+  transition: all 0.2s ease-in;
   list-style: none;
 
   /* Hiding */
@@ -2078,7 +2081,7 @@ span,a {
   color: #333;
   padding: 10px;
   transition: all 0.3s ease-out;
-  border-bottom: 1px solid #e6e8ea;
+  border-bottom: 1px solid #017F7B;
 }
 
 .wrapper-dropdown .dropdown li:last-of-type a {
@@ -2139,7 +2142,7 @@ span,a {
   right: 13px;
   border-width: 0 8px 8px 8px;
   border-style: solid;
-  border-color: rgba(0,0,0,0.1) transparent;
+  border-color: #017F7B transparent;
 }
 
 .add-cta {
@@ -2412,7 +2415,56 @@ input[type="radio"] {
   transition: 0.1s transform linear;
   color: #017F7B;
   text-decoration: underline;
+  font-family: "museo-sans", "Museo Sans", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
 }
 .next-box-ships .drawer-link {
   right: 0px;
+}
+
+// ORDER HISTORY
+// table border
+.profile, .drawer-outer {
+  th, td {
+      border: none !important;
+  }
+
+  table { border-collapse: separate; }
+  td { border: solid 1px #000; }
+  tr:first-child td:first-child { border-top-left-radius: 8px; }
+  tr:first-child td:last-child { border-top-right-radius: 8px; }
+  tr:last-child td:first-child { border-bottom-left-radius: 8px; }
+  tr:last-child td:last-child { border-bottom-right-radius: 8px; }
+
+  .order-row {
+    background-color: #fafafa;
+
+    td {
+      padding: 25px 15px;
+    }
+  }
+}
+
+.styled-link {
+  transition: 0.1s transform linear;
+  color: #017F7B;
+  text-decoration: underline;
+  font-family: "museo-sans", "Museo Sans", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+}
+
+.order-address-container {
+  background-color: #fafafa;
+  padding: 25px 15px;
+  border-radius: 8px;
+}
+
+// plans placeholder images
+.placeholder-image {
+  background-image: url('https://cdn.shopify.com/s/files/1/0107/1569/3113/files/portal-plans-image.jpg?14398016368482308827');
+  background-size: cover;
+  background-position: center;
+  padding-bottom: 128%;
+  border-radius: 8px;
+  height: 100%;
 }
