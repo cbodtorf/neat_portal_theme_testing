@@ -123,15 +123,11 @@
           <p class="line-item-property__field">
             <label>Ongoing Subscription</label><br>
             <select required class="required ongoing-sub" id="ongoing_variant_id" name="properties[_ongoing_variant_id]">
-              <option value="9980429303865">Vegan Chocolate</option>
-              <option value="9980429369401">Vegan Vanilla</option>
-              <option value="9980429434937">Vegan Mixed</option>
-              <option value="9980541698105">Whey Chocolate</option>
-              <option value="9980541730873">Whey Vanilla</option>
-              <option value="9980541763641">Whey Mixed</option>
-              <option value="9980586065977">Vegan & Whey Chocolate</option>
-              <option value="9980586098745">Vegan & Whey Vanilla</option>
-              <option value="9980586131513">Vegan & Whey Mixed</option>
+              {% for p in collections['replenish-boxes'].products %}
+                {% for v in p.variants %}
+                  <option data-product-id="{{ p.id }}" data-variant-id="{{ v.id }}" value="{{ v.sku }}">{{ p.title }} - {{ v.title }}</option>
+                {% endfor %}
+              {% endfor %}
             </select>
           </p>
           <input type="text" name="properties[_product_handle]" value="{{ product.handle }}">
